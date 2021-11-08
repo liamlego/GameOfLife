@@ -43,7 +43,7 @@ bool CellGrid::determineNextGeneration() {
 
                 int numberOfLiveCells = 0;
 
-                if ((i+1 < width && j+1 < height-1) && *cellGrid[i+1][j+1]->getState() == ALIVE) {
+                if ((i+1 < width && j+1 < height) && *cellGrid[i+1][j+1]->getState() == ALIVE) {
                     numberOfLiveCells++;
                 }
                 // i+1 && j
@@ -51,15 +51,15 @@ bool CellGrid::determineNextGeneration() {
                     numberOfLiveCells++;
                 }
                 // i && j+1
-                if ((j+1 < height-1) && *cellGrid[i][j+1]->getState() == ALIVE) {
+                if ((j+1 < height) && *cellGrid[i][j+1]->getState() == ALIVE) {
                     numberOfLiveCells++;
                 }
                 // i+1 && j-1
-                if ((i+1 < width-1 && j-1 >= 0) && *cellGrid[i+1][j-1]->getState() == ALIVE) {
+                if ((i+1 < width && j-1 >= 0) && *cellGrid[i+1][j-1]->getState() == ALIVE) {
                     numberOfLiveCells++;
                 }
                 // i-1 && j+1
-                if ((i-1 >= 0 && j+1 < height-1) && *cellGrid[i-1][j+1]->getState() == ALIVE) {
+                if ((i-1 >= 0 && j+1 < height) && *cellGrid[i-1][j+1]->getState() == ALIVE) {
                     numberOfLiveCells++;
                 }
                 // i-1 && j-1
