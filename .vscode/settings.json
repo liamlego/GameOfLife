@@ -1,0 +1,13 @@
+{
+    "files.exclude": {
+        "**/*.dll": true,
+        "**/*.exe": true,
+        "**/*.o": true
+    },
+    "files.associations": {
+        "chrono": "cpp",
+        "iostream": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
+    }
+}
