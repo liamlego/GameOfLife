@@ -1,5 +1,10 @@
 #include "cell.h"
 
+/*
+* Conoway's Game of Life Simulation
+* Created by Liam Morrison 11/13/2021
+* Uses SFML Graphics API
+*/
 
 Cell::Cell(CELL_STATE state) : state{state} {
 

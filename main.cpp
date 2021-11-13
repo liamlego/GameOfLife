@@ -111,6 +111,7 @@ int main()
     return 0;
 }
 
+// Allocates memory for Cell Grid
 vector<vector<Cell*>*> *allocateGrid() {
 
     vector<vector<Cell*>*> *originCells = new vector<vector<Cell*>*>();
@@ -132,6 +133,7 @@ vector<vector<Cell*>*> *allocateGrid() {
     return originCells;
 }
 
+// Deallocates grid to avoid memory leaks
 void deallocateGrid(vector<vector<Cell*>*> *grid) {
     for (int x = 0; x < GRID_WIDTH; x++) {
 
@@ -142,6 +144,7 @@ void deallocateGrid(vector<vector<Cell*>*> *grid) {
     }
 }
 
+// draws cellGrid using SFML
 void drawCellGrid(CellGrid &cellGrid, sf::RenderWindow &window) {
 
     float drawLocationX = 0;
@@ -180,6 +183,7 @@ void drawCellGrid(CellGrid &cellGrid, sf::RenderWindow &window) {
 
 }
 
+// Draws the control button for simulation
 void drawControl(sf::RenderWindow &window, sf::Color color) {
             sf::RectangleShape control;
             

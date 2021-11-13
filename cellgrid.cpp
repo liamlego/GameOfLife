@@ -1,5 +1,10 @@
 #include "cellgrid.h"
 
+/*
+* Conoway's Game of Life Simulation
+* Created by Liam Morrison 11/13/2021
+* Uses SFML Graphics API
+*/
 
 CellGrid::CellGrid(int width, int height, const vector<vector<Cell*>*> &startGrid) : width{width}, height{height} {
 
