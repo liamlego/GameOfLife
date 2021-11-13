@@ -6,6 +6,14 @@
 
 using namespace std;
 
+/*
+* Conoway's Game of Life Simulation
+* Created by Liam Morrison 11/13/2021
+* Uses SFML Graphics API
+*/
+
+
+
 // Prototypes
 void drawCellGrid(CellGrid &cellGrid, sf::RenderWindow &window);
 void drawControl(sf::RenderWindow &window, sf::Color color);
