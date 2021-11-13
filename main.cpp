@@ -8,6 +8,7 @@ using namespace std;
 
 // Prototypes
 void drawCellGrid(CellGrid &cellGrid, sf::RenderWindow &window);
+void drawControl(sf::RenderWindow &window, sf::Color color);
 vector<vector<Cell*>*> *allocateGrid();
 void deallocateGrid(vector<vector<Cell*>*> *grid);
 
@@ -17,20 +18,32 @@ const int SCREEN_WIDTH = 800, SCREEN_HEIGHT = 608;
 const float CELL_WIDTH = 16, CELL_HEIGHT = 16;
 const int GRID_WIDTH = SCREEN_WIDTH/CELL_WIDTH, GRID_HEIGHT = SCREEN_HEIGHT/CELL_HEIGHT;
 
-const vector<vector<int>> aliveStartingCells = {{16, 17}, {15, 17}, {16, 16}, {15, 16}, {17, 18}, {17, 19}, {18, 18}, {18, 19}};
+const int CONTROL_BUFFER = 200;
+
+const vector<vector<int>> aliveStartingCells = {};//{1, 0}, {2, 0}, {1, 1}, {2, 1}, {0, 1}, {0, 2}, {1, 2}, {3, 1}, {3, 2}, {3, 3}, {4, 2}, {2, 3}};
 
 int main()
 {
 
-    cout << "Starting..." << endl;
+    cout << "Starting a Game of Life..." << endl;
 
 
-    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Conoway's Game of Life");
+    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT+CONTROL_BUFFER), "Conoway's Game of Life");
 
     vector<vector<Cell*>*> *originCells = allocateGrid();
 
     CellGrid cellGrid(GRID_WIDTH, GRID_HEIGHT, *originCells);
 
+    int mouseX = 0;
+    int mouseY = 0;
+
+    bool runSimulation = false;
+
+    bool justClicked = false;
+
+    sf::Color color = sf::Color::Green;
+
+    cout << "Conway's Game of Life" << endl;
     while (window.isOpen())
     {
         sf::Event event;
@@ -38,18 +51,50 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                mouseX = sf::Mouse::getPosition(window).x/CELL_WIDTH;
+                mouseY = sf::Mouse::getPosition(window).y/CELL_HEIGHT;
+                justClicked = true;
+            }    
+
+            if (event.type == sf::Event::KeyPressed) {
+                runSimulation = !runSimulation;
+            }
         }
 
         // Draw cells
         window.clear();   
         drawCellGrid(cellGrid, window);
+        drawControl(window, color);
         window.display();
 
-        this_thread::sleep_for(250ms);
-        // Update cells
-        cellGrid.determineNextGeneration();
-        cellGrid.birthNextGeneration();
+        if (justClicked) {
+            if (mouseX < GRID_WIDTH && mouseX >= 0 && mouseY < GRID_HEIGHT && mouseY >= 0) {
+                if (*cellGrid.getCellGrid()[mouseX][mouseY]->getState() == ALIVE) {
+                    cellGrid.getCellGrid()[mouseX][mouseY]->setState(DEAD);
+                    *cellGrid.getNextGeneration()[mouseX]->at(mouseY) = DEAD;
+                } else {
+                    cellGrid.getCellGrid()[mouseX][mouseY]->setState(ALIVE);
+                    *cellGrid.getNextGeneration()[mouseX]->at(mouseY) = ALIVE;
+                }
+            } else {
+                if (color == sf::Color::Red) {
+                    color = sf::Color::Green;
+                } else {
+                    color = sf::Color::Red;
+                }
+                runSimulation = !runSimulation;
+            }
+            justClicked = false;
+        }
 
+        // Update cells
+        if (runSimulation) {
+            this_thread::sleep_for(50ms);
+            cellGrid.determineNextGeneration();
+            cellGrid.birthNextGeneration();
+        }
         
     }
 
@@ -66,8 +111,9 @@ vector<vector<Cell*>*> *allocateGrid() {
 
         for (int y = 0; y < GRID_HEIGHT; y++) {
             originCells->push_back(new vector<Cell*>());
+            originCells->at(x)->push_back(new Cell(DEAD));
+            originCells->at(x)->at(y)->setState(DEAD);
             for (int i = 0; i < aliveStartingCells.size(); i++) {
-                originCells->at(x)->push_back(new Cell(DEAD));
                 if (x == aliveStartingCells[i][0] && y == aliveStartingCells[i][1]) { 
                     originCells->at(x)->at(y)->setState(ALIVE);
                 } 
@@ -124,4 +170,23 @@ void drawCellGrid(CellGrid &cellGrid, sf::RenderWindow &window) {
         
     }
 
+}
+
+void drawControl(sf::RenderWindow &window, sf::Color color) {
+            sf::RectangleShape control;
+            
+            sf::Vector2f controlV;
+            controlV.x = SCREEN_WIDTH;
+            controlV.y = CONTROL_BUFFER;
+
+            control.setSize(controlV);
+
+            sf::Vector2f controlPosition;
+            controlPosition.x = 0;
+            controlPosition.y = SCREEN_HEIGHT;
+
+            control.setPosition(controlPosition);
+
+            control.setFillColor(color);
+            window.draw(control);
 }
